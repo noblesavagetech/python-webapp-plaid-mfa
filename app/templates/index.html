@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBA Services - Business Development Financials</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+<body>
+    <header>
+        <h1>Welcome to BBA Services</h1>
+        <p>Your Partner in Business Development and Financial Health</p>
+    </header>
+    <main>
+        <section class="hero">
+            <h2>Assess Your Financial Health</h2>
+            <p>Our platform helps businesses evaluate and improve their financial standing with expert tools and insights.</p>
+            <a href="{{ url_for('web.signup') }}" class="btn">Get Started</a>
+        </section>
+        <section class="features">
+            <h3>Key Features</h3>
+            <ul>
+                <li>Financial Questionnaire for Health Assessment</li>
+                <li>Secure User Authentication</li>
+                <li>Wave Apps Integration for Data Sync</li>
+                <li>RESTful API for Seamless Operations</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 BBA Services. All rights reserved.</p>
+    </footer>
+</body>
+</html>
