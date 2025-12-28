@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email - BBA Services{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+
+<h1>📧 Verify Your Email</h1>
+
+<div class="info-box">
+    <p style="margin-bottom: 10px;"><strong>Your email:</strong> {{ current_user.email }}</p>
+    <p>We've sent a 6-digit verification code to your email address. Please enter it below:</p>
+</div>
+
+<form method="POST" action="{{ url_for('auth.verify_email') }}">
+    <div>
+        <label for="verification_code">Verification Code</label>
+        <input type="text" id="verification_code" name="verification_code" required maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit code" autofocus>
+    </div>
+    
+    <button type="submit">Verify Email</button>
+</form>
+
+<div class="link">
+    Didn't receive the code? <a href="{{ url_for('auth.resend_verification') }}">Resend</a>
+</div>
+
+<p style="color: #999; font-size: 14px; margin-top: 20px;">
+    The verification code expires in 24 hours. Check your spam folder if you don't see the email.
+</p>
+{% endblock %}

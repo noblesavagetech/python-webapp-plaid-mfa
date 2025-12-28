@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - BBA Services{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h1>🎉 Welcome to Your Dashboard!</h1>
+    <a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+</div>
+
+<div class="info-box">
+    <p style="margin-bottom: 10px;"><strong>Email:</strong> {{ current_user.email }}</p>
+    <p style="margin-bottom: 10px;"><strong>Account Status:</strong> 
+        <span style="color: #28a745;">✅ Email Verified</span> | 
+        <span style="color: #28a745;">🔒 MFA Enabled</span>
+    </p>
+    <p style="margin: 0; color: #666;">Account created: {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+</div>
+
+<div style="background: #e8f5e8; border: 1px solid #28a745; color: #155724; padding: 20px; border-radius: 8px; margin: 30px 0;">
+    <h3 style="margin: 0 0 10px 0;">🛡️ Your Account is Fully Secured</h3>
+    <p style="margin: 0;">You've successfully completed email verification and two-factor authentication setup. Your account is now protected with multiple layers of security.</p>
+</div>
+
+<div style="margin-top: 40px;">
+    <h2 style="color: #333; margin-bottom: 20px;">What's Next?</h2>
+    <ul style="line-height: 2; color: #555;">
+        <li>📊 Complete your financial health assessment</li>
+        <li>🔗 Connect your Wave Apps account for data syncing</li>
+        <li>📈 View your financial metrics and insights</li>
+        <li>⚙️ Customize your dashboard preferences</li>
+    </ul>
+</div>
+
+<div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-top: 40px; text-align: center;">
+    <h3 style="color: #667eea; margin-bottom: 15px;">Ready to Get Started?</h3>
+    <p style="margin-bottom: 20px; color: #666;">Take control of your financial health with our comprehensive assessment tools.</p>
+    <button onclick="alert('Financial assessment coming soon!')" style="background: #667eea; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer;">
+        Start Financial Assessment
+    </button>
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+/* Modern CSS for BBA Services App */
 * {
     margin: 0;
     padding: 0;
@@ -9,10 +10,179 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #333;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    line-height: 1.6;
 }
 
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    min-height: calc(100vh - 4rem);
+}
+
+/* Typography */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+/* Alerts */
+.alerts {
+    margin-bottom: 2rem;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #b8daff;
+}
+
+/* Forms */
+form {
+    margin-bottom: 2rem;
+}
+
+form div {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-family: inherit;
+}
+
+button:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Links */
+.link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link a:hover {
+    text-decoration: underline;
+}
+
+.logout-link {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    width: auto;
+}
+
+.logout-link:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Info boxes */
+.info-box {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-left: 4px solid #667eea;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+/* Legacy support for existing templates */
 header {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -20,17 +190,6 @@ header {
     text-align: center;
     padding: 2rem 1rem;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-header p {
-    font-size: 1.2rem;
-    font-weight: 300;
 }
 
 main {
@@ -47,6 +206,45 @@ main {
 .hero {
     text-align: center;
     margin-bottom: 3rem;
+}
+
+.btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: #5a67d8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .logout-link {
+        position: static;
+        margin-bottom: 2rem;
+        display: inline-block;
+    }
 }
 
 .hero h2 {

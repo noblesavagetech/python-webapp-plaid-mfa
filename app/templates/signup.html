@@ -1,50 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - BBA Services</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
-</head>
-<body>
-    <header>
-        <h1>Sign Up for BBA Services</h1>
-    </header>
-    <main>
-        <div id="signup-section">
-            <form id="signup-form" method="POST">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit" class="btn">Sign Up</button>
-            </form>
-        </div>
-        
-        <div id="verify-section" style="display: none;">
-            <h3>Check Your Email!</h3>
-            <p>We've sent a verification code to your email.</p>
-            <p><a href="#" id="email-link" target="_blank">View Email (Development)</a></p>
-            <form id="verify-form">
-                <label for="verify-email">Email:</label>
-                <input type="email" id="verify-email" readonly>
-                <label for="verification-code">Verification Code:</label>
-                <input type="text" id="verification-code" placeholder="Enter 6-digit code" required>
-                <button type="submit" class="btn">Verify Email</button>
-            </form>
-            <button id="back-to-signup" class="btn" style="background: #666;">Back to Sign Up</button>
-        </div>
-        
-        <div id="totp-section" style="display: none;">
-            <h3>Email Verified! Set Up Two-Factor Authentication</h3>
-            <p>Your TOTP secret: <code id="totp-secret"></code></p>
-            <p>Set this up in your authenticator app (Google Authenticator, Authy, etc.)</p>
-            <button id="proceed-to-login" class="btn">I've Set Up TOTP - Login Now</button>
-        </div>
-        
-        <p id="login-link">Already have an account? <a href="{{ url_for('web.login') }}">Log In</a></p>
-    </main>
-    <script src="{{ url_for('static', filename='script.js') }}?v=2"></script>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Create Account - BBA Services{% endblock %}
+
+{% block content %}
+<h1>Create Your Account</h1>
+<p style="color: #666; margin-bottom: 25px;">Join BBA Services to assess and improve your financial health</p>
+
+<form method="POST" action="{{ url_for('auth.signup') }}">
+    <div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="you@example.com" autofocus>
+    </div>
+    
+    <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
+        <p style="color: #999; font-size: 13px; margin-top: 5px;">Must be at least 8 characters long</p>
+    </div>
+    
+    <div>
+        <label for="password_confirm">Confirm Password</label>
+        <input type="password" id="password_confirm" name="password_confirm" required placeholder="Confirm your password">
+    </div>
+    
+    <button type="submit">Create Account</button>
+</form>
+
+<div class="link">
+    Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
+</div>
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
+    <h3 style="color: #333; margin-bottom: 15px;">What happens next?</h3>
+    <ol style="color: #666; line-height: 1.6;">
+        <li>We'll send you a verification code via email</li>
+        <li>You'll set up two-factor authentication for security</li>
+        <li>Access your personalized financial dashboard</li>
+    </ol>
+</div>
+{% endblock %}

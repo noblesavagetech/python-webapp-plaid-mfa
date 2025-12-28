@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Set Up MFA - BBA Services{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('auth.logout') }}" class="logout-link">Logout</a>
+
+<h1>🔒 Set Up Two-Factor Authentication</h1>
+
+<div class="info-box">
+    <p style="margin-bottom: 10px;"><strong>Email verified!</strong> Now let's secure your account with MFA.</p>
+</div>
+
+<div style="background: #f8f9fa; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
+    <h3 style="margin-bottom: 15px;">Setup Instructions:</h3>
+    <ol style="margin-left: 20px; color: #555; line-height: 1.8;">
+        <li>Download an authenticator app (Google Authenticator, Authy, 1Password, etc.)</li>
+        <li>Scan the QR code below OR manually enter the secret</li>
+        <li>Enter the 6-digit code from your app to complete setup</li>
+    </ol>
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+    <div style="background: white; padding: 20px; border-radius: 8px; display: inline-block; border: 2px solid #667eea;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ totp_uri }}" alt="QR Code" style="display: block;">
+    </div>
+</div>
+
+<div style="background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <p style="margin: 0;"><strong>Your TOTP Secret (manual entry):</strong></p>
+    <p style="font-family: monospace; font-size: 18px; margin: 10px 0 0 0; letter-spacing: 2px;">{{ totp_secret }}</p>
+</div>
+
+<form method="POST" action="{{ url_for('auth.setup_mfa') }}">
+    <div>
+        <label for="totp_token">Enter Code from Authenticator App</label>
+        <input type="text" id="totp_token" name="totp_token" required maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit code" autofocus>
+    </div>
+    
+    <button type="submit">Complete Setup</button>
+</form>
+
+<p style="color: #999; font-size: 14px; margin-top: 20px; text-align: center;">
+    You've also received this secret via email for your records.
+</p>
+{% endblock %}
