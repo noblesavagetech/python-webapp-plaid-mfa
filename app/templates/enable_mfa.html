@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Enable SMS MFA - BBA Services{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('main.dashboard') }}" class="logout-link">← Back to Dashboard</a>
+
+<h1>📱 Enable SMS MFA</h1>
+
+<div class="info-box">
+    <p>Add an extra layer of security to your account with SMS-based two-factor authentication.</p>
+</div>
+
+{% if step == 2 %}
+<form method="POST" action="{{ url_for('main.enable_mfa') }}">
+    <input type="hidden" name="phone_hidden" value="{{ phone }}">
+    
+    <div>
+        <label for="sms_code">Verification Code</label>
+        <input type="text" id="sms_code" name="sms_code" required maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit code" autofocus>
+        <p style="color: #999; font-size: 13px; margin-top: 5px;">
+            We sent a verification code to {{ phone }}
+        </p>
+    </div>
+    
+    <button type="submit">Enable MFA</button>
+</form>
+{% else %}
+<form method="POST" action="{{ url_for('main.enable_mfa') }}">
+    <div>
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+1234567890" autofocus>
+        <p style="color: #999; font-size: 13px; margin-top: 5px;">
+            Include country code (e.g., +1 for US)
+        </p>
+    </div>
+    
+    <button type="submit">Send Verification Code</button>
+</form>
+{% endif %}
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
+    <h3 style="color: #333; margin-bottom: 15px;">How SMS MFA Works</h3>
+    <ol style="color: #666; line-height: 1.6;">
+        <li>Enter your phone number</li>
+        <li>Receive a 6-digit code via SMS</li>
+        <li>Enter the code to verify and enable MFA</li>
+        <li>Use SMS codes when logging in</li>
+    </ol>
+</div>
+{% endblock %}

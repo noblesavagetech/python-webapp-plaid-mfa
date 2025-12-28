@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Create Your Account</h1>
-<p style="color: #666; margin-bottom: 25px;">Join BBA Services to assess and improve your financial health</p>
+<p style="color: #666; margin-bottom: 25px;">Join BBA Services for financial health assessment</p>
 
 <form method="POST" action="{{ url_for('auth.signup') }}">
     <div>
@@ -14,8 +14,8 @@
     
     <div>
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
-        <p style="color: #999; font-size: 13px; margin-top: 5px;">Must be at least 8 characters long</p>
+        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="6">
+        <p style="color: #999; font-size: 13px; margin-top: 5px;">Must be at least 6 characters</p>
     </div>
     
     <div>
@@ -28,14 +28,5 @@
 
 <div class="link">
     Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
-</div>
-
-<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
-    <h3 style="color: #333; margin-bottom: 15px;">What happens next?</h3>
-    <ol style="color: #666; line-height: 1.6;">
-        <li>We'll send you a verification code via email</li>
-        <li>You'll set up two-factor authentication for security</li>
-        <li>Access your personalized financial dashboard</li>
-    </ol>
 </div>
 {% endblock %}

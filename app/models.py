@@ -2,13 +2,12 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-import pyotp
 
 db = SQLAlchemy()
 
 
 class User(UserMixin, db.Model):
-    """User model with email verification and MFA support."""
+    """Simple user model with email verification and optional SMS MFA."""
     
     __tablename__ = 'users'
     
@@ -17,12 +16,13 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     is_verified = db.Column(db.Boolean, default=False, nullable=False)
     
-    # MFA fields
-    totp_secret = db.Column(db.String(255), nullable=True)
+    # Optional MFA fields
+    phone = db.Column(db.String(20), nullable=True)
     mfa_enabled = db.Column(db.Boolean, default=False, nullable=False)
     
-    # Temporary verification storage
-    verification_code = db.Column(db.String(6), nullable=True)
+    # Temporary codes
+    verification_code = db.Column(db.String(6), nullable=True)  # Email verification
+    sms_code = db.Column(db.String(6), nullable=True)  # SMS MFA code
     
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -32,8 +32,8 @@ class User(UserMixin, db.Model):
         return f'<User {self.email}>'
     
     def set_password(self, password):
-        """Hash and set the user's password using PBKDF2."""
-        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
+        """Hash and set the user's password."""
+        self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):
         """Verify the password against the stored hash."""
@@ -43,27 +43,18 @@ class User(UserMixin, db.Model):
         """Mark the user's email as verified."""
         self.is_verified = True
         self.verified_at = datetime.utcnow()
-        self.verification_code = None  # Clear the code
+        self.verification_code = None
     
-    def generate_totp_secret(self):
-        """Generate a new TOTP secret for MFA."""
-        self.totp_secret = pyotp.random_base32()
+    def enable_mfa(self, phone_number):
+        """Enable SMS-based MFA with phone number."""
+        self.phone = phone_number
+        self.mfa_enabled = True
     
-    def verify_totp(self, token):
-        """Verify a TOTP token."""
-        if not self.totp_secret or not self.mfa_enabled:
-            return False
-        totp = pyotp.TOTP(self.totp_secret)
-        return totp.verify(token, valid_window=1)
-    
-    def get_totp_uri(self):
-        """Get the TOTP provisioning URI for QR code generation."""
-        if not self.totp_secret:
-            return None
-        return pyotp.totp.TOTP(self.totp_secret).provisioning_uri(
-            name=self.email,
-            issuer_name='BBA Services'
-        )
+    def disable_mfa(self):
+        """Disable MFA."""
+        self.mfa_enabled = False
+        self.phone = None
+        self.sms_code = None
 
 
 class QuestionnaireResponse(db.Model):
