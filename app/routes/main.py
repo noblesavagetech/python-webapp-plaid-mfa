@@ -6,6 +6,12 @@ from app.utils.sms import send_sms_code, generate_code
 main_bp = Blueprint('main', __name__)
 
 
+@main_bp.route('/health')
+def health():
+    """Health check endpoint for Railway."""
+    return {'status': 'ok'}, 200
+
+
 @main_bp.route('/')
 def index():
     """Landing page."""

@@ -1,7 +1,12 @@
 {
-  "build": { "builder": "NIXPACKS" },
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": { 
+    "builder": "NIXPACKS"
+  },
   "deploy": { 
-    "healthCheckPath": "/", 
-    "restartPolicyType": "ON_FAILURE"
+    "healthCheckPath": "/health", 
+    "healthCheckTimeout": 30,
+    "restartPolicyType": "ON_FAILURE",
+    "startCommand": "flask db upgrade && gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --preload app:app"
   }
 }

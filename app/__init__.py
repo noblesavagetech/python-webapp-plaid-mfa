@@ -19,15 +19,6 @@ def create_app():
     db.init_app(app)
     migrate = Migrate(app, db)
     
-    # Run migrations on startup
-    with app.app_context():
-        try:
-            from flask_migrate import upgrade
-            upgrade()
-            print("Database migrations applied successfully")
-        except Exception as e:
-            print(f"Migration error (might be okay if already applied): {e}")
-    
     # Initialize Flask-Login
     login_manager = LoginManager()
     login_manager.init_app(app)
