@@ -20,9 +20,17 @@ def send_sms_code(phone_number, code):
     """
     try:
         # Initialize Vonage client
+        api_key = current_app.config.get('VONAGE_API_KEY')
+        api_secret = current_app.config.get('VONAGE_API_SECRET')
+        brand_name = current_app.config.get('VONAGE_BRAND_NAME', 'BBA Services')
+        
+        if not api_key or not api_secret:
+            print("ERROR - Missing Vonage credentials in config")
+            return None
+        
         auth = Auth(
-            api_key=current_app.config['VONAGE_API_KEY'],
-            api_secret=current_app.config['VONAGE_API_SECRET']
+            api_key=api_key,
+            api_secret=api_secret
         )
         client = Vonage(auth=auth)
         
@@ -33,7 +41,7 @@ def send_sms_code(phone_number, code):
         
         verify_request = VerifyRequest(
             number=phone_digits,
-            brand=current_app.config['VONAGE_BRAND_NAME'],
+            brand=brand_name,
             code_length=6,
             workflow_id=1  # SMS only (1=SMS, 6=SMS->TTS, 7=SMS->TTS->TTS)
         )

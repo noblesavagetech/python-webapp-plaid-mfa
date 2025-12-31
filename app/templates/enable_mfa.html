@@ -7,29 +7,39 @@
 
 <h1>📱 Enable SMS MFA</h1>
 
-<div class="info-box">
-    <p>Add an extra layer of security to your account with SMS-based two-factor authentication.</p>
+{% if step == 2 %}
+<div class="info-box" style="background: #d4edda; border-color: #c3e6cb; color: #155724;">
+    <p>✅ A 6-digit verification code has been sent to <strong>{{ phone }}</strong></p>
+    <p style="margin-bottom: 0; font-size: 14px;">Check your phone and enter the code below.</p>
 </div>
 
-{% if step == 2 %}
 <form method="POST" action="{{ url_for('main.enable_mfa') }}">
     <input type="hidden" name="phone_hidden" value="{{ phone }}">
     
     <div>
         <label for="sms_code">Verification Code</label>
         <input type="text" id="sms_code" name="sms_code" required maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit code" autofocus>
-        <p style="color: #999; font-size: 13px; margin-top: 5px;">
-            We sent a verification code to {{ phone }}
-        </p>
     </div>
     
-    <button type="submit">Enable MFA</button>
+    <button type="submit">Verify and Enable MFA</button>
 </form>
+
+<div style="margin-top: 15px; text-align: center;">
+    <p style="color: #666; font-size: 14px;">
+        Didn't receive the code? 
+        <a href="{{ url_for('main.enable_mfa') }}" style="color: #007bff; text-decoration: underline;">Start over</a>
+    </p>
+</div>
+
 {% else %}
+<div class="info-box">
+    <p>Add an extra layer of security to your account with SMS-based two-factor authentication.</p>
+</div>
+
 <form method="POST" action="{{ url_for('main.enable_mfa') }}">
     <div>
         <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" name="phone" required placeholder="+1234567890" autofocus>
+        <input type="tel" id="phone" name="phone" required placeholder="+15551234567" autofocus>
         <p style="color: #999; font-size: 13px; margin-top: 5px;">
             Include country code (e.g., +1 for US)
         </p>
@@ -37,15 +47,15 @@
     
     <button type="submit">Send Verification Code</button>
 </form>
-{% endif %}
 
 <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
     <h3 style="color: #333; margin-bottom: 15px;">How SMS MFA Works</h3>
     <ol style="color: #666; line-height: 1.6;">
-        <li>Enter your phone number</li>
+        <li>Enter your phone number with country code</li>
         <li>Receive a 6-digit code via SMS</li>
         <li>Enter the code to verify and enable MFA</li>
         <li>Use SMS codes when logging in</li>
     </ol>
 </div>
+{% endif %}
 {% endblock %}
