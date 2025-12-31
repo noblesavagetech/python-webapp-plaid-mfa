@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
 
 class QuestionnaireResponse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     answers = db.Column(db.JSON, nullable=False)
     score = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -68,7 +68,7 @@ class QuestionnaireResponse(db.Model):
 
 class WaveToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     access_token = db.Column(db.String, nullable=False)
     refresh_token = db.Column(db.String)
     expires_at = db.Column(db.DateTime)
