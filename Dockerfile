@@ -16,4 +16,5 @@ COPY . .
 
 ENV FLASK_APP=app.py
 
-CMD python init_db.py && echo "Database ready, starting gunicorn..." && gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 2 --log-level info app:app
+# Start gunicorn immediately - tables created on first request
+CMD exec gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 1 --threads 2 --log-level debug app:app

@@ -2,9 +2,9 @@
 Flask Email Verification App with MFA
 Main application package
 """
+import os
 from flask import Flask
 from flask_login import LoginManager
-from flask_migrate import Migrate
 from app.models import db, User
 from app.routes.auth import auth_bp
 from app.routes.main import main_bp
@@ -15,9 +15,19 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Initialize database
+    # Initialize database (no migrations - just connection setup)
     db.init_app(app)
-    migrate = Migrate(app, db)
+    
+    # Create tables on first request if they don't exist
+    @app.before_request
+    def create_tables():
+        if not getattr(app, '_tables_created', False):
+            app._tables_created = True
+            try:
+                db.create_all()
+                print("Database tables ready")
+            except Exception as e:
+                print(f"Table note: {e}")
     
     # Initialize Flask-Login
     login_manager = LoginManager()
