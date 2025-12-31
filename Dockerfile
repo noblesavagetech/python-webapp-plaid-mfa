@@ -16,4 +16,4 @@ COPY . .
 
 ENV FLASK_APP=app.py
 
-CMD flask db upgrade && echo "Migration complete, starting gunicorn..." && gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 2 --log-level info app:app
+CMD python init_db.py && echo "Database ready, starting gunicorn..." && gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 2 --log-level info app:app
