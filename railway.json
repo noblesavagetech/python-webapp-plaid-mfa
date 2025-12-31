@@ -6,7 +6,6 @@
   "deploy": { 
     "healthCheckPath": "/health", 
     "healthCheckTimeout": 30,
-    "restartPolicyType": "ON_FAILURE",
-    "startCommand": "flask db upgrade && echo 'Migration complete, starting gunicorn...' && gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --log-level info app:app"
+    "restartPolicyType": "ON_FAILURE"
   }
 }
