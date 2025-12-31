@@ -66,20 +66,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Back to signup button
-    document.getElementById('back-to-signup').addEventListener('click', function() {
-        verifySection.style.display = 'none';
-        signupSection.style.display = 'block';
-        document.getElementById('login-link').style.display = 'block';
-    });
+    // Back to signup button (only if it exists)
+    const backToSignupBtn = document.getElementById('back-to-signup');
+    if (backToSignupBtn) {
+        backToSignupBtn.addEventListener('click', function() {
+            verifySection.style.display = 'none';
+            signupSection.style.display = 'block';
+            document.getElementById('login-link').style.display = 'block';
+        });
+    }
 
-    // Proceed to login button
-    document.getElementById('proceed-to-login').addEventListener('click', function() {
-        // Store TOTP secret for login page
-        sessionStorage.setItem('signup_email', currentEmail);
-        sessionStorage.setItem('totp_secret', totpSecret);
-        window.location.href = '/login';
-    });
+    // Proceed to login button (only if it exists)
+    const proceedToLoginBtn = document.getElementById('proceed-to-login');
+    if (proceedToLoginBtn) {
+        proceedToLoginBtn.addEventListener('click', function() {
+            // Store TOTP secret for login page
+            sessionStorage.setItem('signup_email', currentEmail);
+            sessionStorage.setItem('totp_secret', totpSecret);
+            window.location.href = '/login';
+        });
+    }
 
     if (loginForm) {
         // Pre-fill email if coming from signup

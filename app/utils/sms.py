@@ -71,7 +71,7 @@ def verify_sms_code(request_id, code):
         )
         client = Vonage(auth=auth)
         
-        response = client.verify_legacy.check(request_id, code=code)
+        response = client.verify_legacy.check_code(request_id, code=code)
         
         if response.status == '0':  # Success
             print(f"Verification successful for request_id={request_id}")

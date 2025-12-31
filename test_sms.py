@@ -56,7 +56,7 @@ def test_vonage_sms(phone_number):
             
             if code:
                 print(f"\n🔍 Verifying code {code}...")
-                verify_response = client.verify_legacy.check(request_id, code=code)
+                verify_response = client.verify_legacy.check_code(request_id, code=code)
                 
                 if verify_response.status == '0':
                     print("✅ Code verified successfully! SMS is working! 🎉")
