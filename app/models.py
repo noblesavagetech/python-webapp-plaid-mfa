@@ -22,7 +22,8 @@ class User(UserMixin, db.Model):
     
     # Temporary codes
     verification_code = db.Column(db.String(6), nullable=True)  # Email verification
-    sms_code = db.Column(db.String(6), nullable=True)  # SMS MFA code
+    sms_code = db.Column(db.String(6), nullable=True)  # SMS MFA code (legacy)
+    vonage_request_id = db.Column(db.String(64), nullable=True)  # Vonage Verify request ID
     
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

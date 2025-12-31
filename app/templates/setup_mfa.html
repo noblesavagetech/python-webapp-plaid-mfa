@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Set Up Two-Factor Authentication - BBA Services{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h1>🔒 Two-Factor Authentication Required</h1>
+    <p style="color: #666; margin-bottom: 25px;">
+        To protect your account and sensitive financial data, two-factor authentication is mandatory for all users.
+        We'll send a verification code to your mobile phone each time you log in.
+    </p>
+
+    {% if mandatory %}
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+        <strong>⚠️ Required Step:</strong> You must complete this setup to access your account.
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% if not step or step == 1 %}
+        <!-- Step 1: Enter phone number -->
+        <div>
+            <label for="phone">Mobile Phone Number</label>
+            <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required 
+                placeholder="+14155551234"
+                pattern="^\+[1-9]\d{1,14}$"
+                title="Enter phone number in E.164 format: +14155551234"
+                autofocus
+            >
+            <p style="color: #999; font-size: 13px; margin-top: 5px;">
+                Format: +[country code][number] (e.g., +14155551234 for US)
+            </p>
+        </div>
+
+        <button type="submit">Send Verification Code</button>
+
+        <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin-top: 20px; border-radius: 4px;">
+            <strong>📱 Why we need this:</strong>
+            <ul style="margin: 10px 0 0 20px; color: #666;">
+                <li>Your phone number is used exclusively for account security</li>
+                <li>We'll send a 6-digit code for verification during login</li>
+                <li>This is not used for marketing - security notifications only</li>
+                <li>Required by financial data protection regulations</li>
+            </ul>
+        </div>
+
+        {% elif step == 2 %}
+        <!-- Step 2: Enter verification code -->
+        <input type="hidden" name="phone_hidden" value="{{ phone }}">
+        
+        <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+            <strong>✓ Code Sent!</strong> Check your phone for a 6-digit verification code.
+        </div>
+
+        <div>
+            <label for="sms_code">Verification Code</label>
+            <input 
+                type="text" 
+                id="sms_code" 
+                name="sms_code" 
+                required 
+                placeholder="123456"
+                pattern="\d{6}"
+                maxlength="6"
+                autofocus
+                style="font-size: 20px; letter-spacing: 0.3em; text-align: center;"
+            >
+            <p style="color: #999; font-size: 13px; margin-top: 5px;">
+                Enter the 6-digit code sent to {{ phone }}
+            </p>
+        </div>
+
+        <button type="submit">Verify & Enable 2FA</button>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="{{ url_for('main.setup_mfa') }}" style="color: #667eea; text-decoration: none;">
+                ← Use a different phone number
+            </a>
+        </div>
+
+        <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 20px; border-radius: 4px; font-size: 13px;">
+            <strong>Didn't receive the code?</strong>
+            <ul style="margin: 10px 0 0 20px; color: #666;">
+                <li>Wait up to 60 seconds for delivery</li>
+                <li>Check your phone number is correct</li>
+                <li>Ensure your phone can receive SMS messages</li>
+                <li>If SMS fails, Vonage will automatically call with a voice code</li>
+            </ul>
+        </div>
+        {% endif %}
+    </form>
+</div>
+
+<style>
+input[type="tel"], input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="tel"]:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

@@ -18,10 +18,10 @@ class Config:
     SENDER_EMAIL = os.getenv('SENDER_EMAIL')
     SENDER_NAME = os.getenv('SENDER_NAME', 'BBA Services')
     
-    # SMS Settings (Twilio)
-    TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
-    TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
-    TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+    # SMS Settings (Vonage Verify API for 2FA)
+    VONAGE_API_KEY = os.getenv('VONAGE_API_KEY')
+    VONAGE_API_SECRET = os.getenv('VONAGE_API_SECRET')
+    VONAGE_BRAND_NAME = os.getenv('VONAGE_BRAND_NAME', 'BBA Services')
     
     # Security Settings
     SESSION_COOKIE_SECURE = os.getenv('FLASK_ENV') == 'production'

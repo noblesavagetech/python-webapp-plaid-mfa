@@ -44,12 +44,11 @@ def enable_mfa():
                 flash('Phone number required.', 'danger')
                 return render_template('enable_mfa.html')
             
-            # Generate and send SMS code
-            code = generate_code()
-            current_user.sms_code = code
-            db.session.commit()
-            
-            if send_sms_code(phone, code):
+            # Send SMS code via Vonage - it returns request_id
+            request_id = send_sms_code(phone, None)  # Vonage generates the code
+            if request_id:
+                current_user.vonage_request_id = request_id
+                db.session.commit()
                 flash('Verification code sent to your phone.', 'success')
                 return render_template('enable_mfa.html', phone=phone, step=2)
             else:
@@ -60,9 +59,12 @@ def enable_mfa():
             # Step 2: Verify code and enable MFA
             phone = request.form.get('phone_hidden')
             
-            if current_user.sms_code == sms_code:
+            # Import verify function
+            from app.utils.sms import verify_sms_code
+            
+            if current_user.vonage_request_id and verify_sms_code(current_user.vonage_request_id, sms_code):
                 current_user.enable_mfa(phone)
-                current_user.sms_code = None  # Clear temp code
+                current_user.vonage_request_id = None  # Clear temp request_id
                 db.session.commit()
                 flash('SMS MFA enabled successfully!', 'success')
                 return redirect(url_for('main.dashboard'))

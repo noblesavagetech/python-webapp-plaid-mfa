@@ -109,18 +109,21 @@ def login():
             flash('Invalid email or password.', 'danger')
             return render_template('login.html')
         
-        # Check MFA if enabled
+        # Check MFA if enabled (optional)
         if user.mfa_enabled:
             if not sms_code:
                 flash('Please enter your SMS code.', 'danger')
                 return render_template('login.html', require_mfa=True)
             
-            if user.sms_code != sms_code:
+            # Import verify function
+            from app.utils.sms import verify_sms_code
+            
+            if not user.vonage_request_id or not verify_sms_code(user.vonage_request_id, sms_code):
                 flash('Invalid SMS code.', 'danger')
                 return render_template('login.html', require_mfa=True)
             
-            # Clear SMS code after use
-            user.sms_code = None
+            # Clear request ID after use
+            user.vonage_request_id = None
             db.session.commit()
         
         login_user(user)
@@ -172,11 +175,11 @@ def request_sms_code():
         flash('MFA not enabled.', 'danger')
         return redirect(url_for('auth.login'))
     
-    sms_code = generate_code()
-    user.sms_code = sms_code
-    db.session.commit()
-    
-    if send_sms_code(user.phone, sms_code):
+    # Send SMS code via Vonage - it returns request_id
+    request_id = send_sms_code(user.phone, None)  # Vonage generates the code
+    if request_id:
+        user.vonage_request_id = request_id
+        db.session.commit()
         flash(f'SMS code sent to {user.phone[-4:].rjust(len(user.phone), "*")}', 'success')
     else:
         flash('Failed to send SMS.', 'danger')
