@@ -14,6 +14,6 @@ RUN apt-get update \
 
 COPY . .
 
-ENV FLASK_APP=run.py
+ENV FLASK_APP=app.py
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:app", "--workers", "4"]
+CMD flask db upgrade && echo "Migration complete, starting gunicorn..." && gunicorn --bind 0.0.0.0:${PORT:-5000} --timeout 120 --workers 2 --log-level info app:app
