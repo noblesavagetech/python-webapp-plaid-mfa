@@ -1,1 +1,1 @@
-web: python -c "print('Starting app...'); import app; print('App imported')" && flask db upgrade && echo "Migration complete" && gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --log-level debug app:app
+web: gunicorn --bind 0.0.0.0:$PORT --timeout 120 --workers 2 --preload app:app

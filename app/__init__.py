@@ -17,7 +17,16 @@ def create_app():
     
     # Initialize database
     db.init_app(app)
-    Migrate(app, db)  # Handles the 'if exists' schema logic
+    migrate = Migrate(app, db)
+    
+    # Run migrations on startup
+    with app.app_context():
+        try:
+            from flask_migrate import upgrade
+            upgrade()
+            print("Database migrations applied successfully")
+        except Exception as e:
+            print(f"Migration error (might be okay if already applied): {e}")
     
     # Initialize Flask-Login
     login_manager = LoginManager()
