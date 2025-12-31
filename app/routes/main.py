@@ -40,10 +40,25 @@ def enable_mfa():
         return redirect(url_for('main.dashboard'))
     
     if request.method == 'POST':
-        phone = request.form.get('phone', '').strip()
         sms_code = request.form.get('sms_code', '').strip()
         
-        if not phone and not sms_code:
+        if sms_code:
+            # Step 2: Verify code and enable MFA
+            phone = request.form.get('phone_hidden')
+            
+            # Import verify function
+            from app.utils.sms import verify_sms_code
+            
+            if current_user.vonage_request_id and verify_sms_code(current_user.vonage_request_id, sms_code):
+                current_user.enable_mfa(phone)
+                current_user.vonage_request_id = None  # Clear temp request_id
+                db.session.commit()
+                flash('SMS MFA enabled successfully!', 'success')
+                return redirect(url_for('main.dashboard'))
+            else:
+                flash('Invalid verification code.', 'danger')
+                return render_template('enable_mfa.html', phone=phone, step=2)
+        else:
             # Step 1: Send verification code
             phone = request.form.get('phone', '').strip()
             if not phone:
@@ -60,23 +75,6 @@ def enable_mfa():
             else:
                 flash('Failed to send SMS.', 'danger')
                 return render_template('enable_mfa.html')
-        
-        elif sms_code:
-            # Step 2: Verify code and enable MFA
-            phone = request.form.get('phone_hidden')
-            
-            # Import verify function
-            from app.utils.sms import verify_sms_code
-            
-            if current_user.vonage_request_id and verify_sms_code(current_user.vonage_request_id, sms_code):
-                current_user.enable_mfa(phone)
-                current_user.vonage_request_id = None  # Clear temp request_id
-                db.session.commit()
-                flash('SMS MFA enabled successfully!', 'success')
-                return redirect(url_for('main.dashboard'))
-            else:
-                flash('Invalid verification code.', 'danger')
-                return render_template('enable_mfa.html', phone=phone, step=2)
     
     return render_template('enable_mfa.html')
 

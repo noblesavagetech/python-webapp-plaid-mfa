@@ -109,18 +109,25 @@ def login():
             flash('Invalid email or password.', 'danger')
             return render_template('login.html')
         
-        # Check MFA if enabled (optional)
+        # Check MFA if enabled
         if user.mfa_enabled:
             if not sms_code:
-                flash('Please enter your SMS code.', 'danger')
-                return render_template('login.html', require_mfa=True)
+                # Send SMS code automatically on first login attempt
+                request_id = send_sms_code(user.phone, None)
+                if request_id:
+                    user.vonage_request_id = request_id
+                    db.session.commit()
+                    flash(f'SMS code sent to your phone ending in {user.phone[-4:]}.', 'success')
+                else:
+                    flash('Failed to send SMS code. Please try again.', 'danger')
+                return render_template('login.html', require_mfa=True, email=email)
             
             # Import verify function
             from app.utils.sms import verify_sms_code
             
             if not user.vonage_request_id or not verify_sms_code(user.vonage_request_id, sms_code):
                 flash('Invalid SMS code.', 'danger')
-                return render_template('login.html', require_mfa=True)
+                return render_template('login.html', require_mfa=True, email=email)
             
             # Clear request ID after use
             user.vonage_request_id = None
@@ -165,14 +172,19 @@ def resend_verification():
     return redirect(url_for('auth.verify_email'))
 
 
-@auth_bp.route('/request-sms-code')
-@login_required
+@auth_bp.route('/request-sms-code', methods=['POST'])
 def request_sms_code():
-    """Send SMS code for MFA login."""
-    user = User.query.get(current_user.id)
+    """Resend SMS code for MFA login (for users not yet logged in)."""
+    email = request.form.get('email', '').strip()
     
-    if not user.mfa_enabled or not user.phone:
-        flash('MFA not enabled.', 'danger')
+    if not email:
+        flash('Email required to resend SMS code.', 'danger')
+        return redirect(url_for('auth.login'))
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if not user or not user.mfa_enabled or not user.phone:
+        flash('Unable to send SMS code.', 'danger')
         return redirect(url_for('auth.login'))
     
     # Send SMS code via Vonage - it returns request_id
@@ -180,8 +192,8 @@ def request_sms_code():
     if request_id:
         user.vonage_request_id = request_id
         db.session.commit()
-        flash(f'SMS code sent to {user.phone[-4:].rjust(len(user.phone), "*")}', 'success')
+        flash(f'SMS code sent to your phone ending in {user.phone[-4:]}.', 'success')
     else:
         flash('Failed to send SMS.', 'danger')
     
-    return redirect(url_for('auth.login'))
+    return render_template('login.html', require_mfa=True, email=email)

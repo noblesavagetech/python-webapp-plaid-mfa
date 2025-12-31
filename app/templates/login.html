@@ -9,26 +9,33 @@
 <form method="POST" action="{{ url_for('auth.login') }}">
     <div>
         <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="you@example.com" autofocus>
+        <input type="email" id="email" name="email" required placeholder="you@example.com" value="{{ email or '' }}" {% if require_mfa %}readonly{% endif %} {% if not require_mfa %}autofocus{% endif %}>
     </div>
     
     <div>
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your password">
+        <input type="password" id="password" name="password" required placeholder="Enter your password" {% if require_mfa %}readonly{% endif %}>
     </div>
     
     {% if require_mfa %}
     <div>
         <label for="sms_code">SMS Code</label>
-        <input type="text" id="sms_code" name="sms_code" maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit SMS code">
+        <input type="text" id="sms_code" name="sms_code" required maxlength="6" pattern="\d{6}" placeholder="Enter 6-digit SMS code" autofocus>
         <p style="color: #999; font-size: 13px; margin-top: 5px;">
-            <a href="{{ url_for('auth.request_sms_code') }}">Send SMS code</a>
+            Check your phone for the verification code.
         </p>
     </div>
     {% endif %}
     
     <button type="submit">Sign In</button>
 </form>
+
+{% if require_mfa %}
+<form method="POST" action="{{ url_for('auth.request_sms_code') }}" style="margin-top: 15px;">
+    <input type="hidden" name="email" value="{{ email }}">
+    <button type="submit" style="background: #6c757d;">Resend SMS Code</button>
+</form>
+{% endif %}
 
 <div class="link">
     Don't have an account? <a href="{{ url_for('auth.signup') }}">Create one</a>
